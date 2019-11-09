@@ -141,6 +141,9 @@ group :development, :test do
 
   # For intellisense in editors
   gem "solargraph"
+
+  # For generating sample data
+  gem "faker"
 end
 
 group :development do
