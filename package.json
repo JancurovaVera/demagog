@@ -108,6 +108,7 @@
     "@prettier/plugin-ruby": "^0.14.0",
     "@types/node": "^12.12.5",
     "apollo": "2.21.0",
+    "cypress": "^3.6.1",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.9.1",
     "jest": "^24.7.1",
