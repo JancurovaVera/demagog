@@ -48,6 +48,7 @@ export class SearchInput extends React.Component<IProps, IState> {
       <div className={classNames(Classes.INPUT_GROUP)}>
         <Icon icon={IconNames.SEARCH} />
         <input
+          data-test-id="search-input"
           className={Classes.INPUT}
           type="search"
           placeholder={placeholder}

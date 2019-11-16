@@ -6,8 +6,12 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Role.find_or_create_by!(key: "admin", name: "Administrátor")
-Role.find_or_create_by!(key: "expert", name: "Expert")
+require "faker"
+
+Faker::Config.random = Random.new(42)
+
+admin = Role.find_or_create_by!(key: "admin", name: "Administrátor")
+expert = Role.find_or_create_by!(key: "expert", name: "Expert")
 Role.find_or_create_by!(key: "social_media_manager", name: "Síťař")
 Role.find_or_create_by!(key: "proofreader", name: "Korektor")
 Role.find_or_create_by!(key: "intern", name: "Stážista")
@@ -41,5 +45,39 @@ AssessmentMethodology.create!(
 AssessmentMethodology.create!(
   name: "Demagog.cz metodika analýzy slibů druhé vlády Andreje Babiše",
   rating_model: AssessmentMethodology::RATING_MODEL_PROMISE_RATING,
-  rating_keys: [PromiseRating::FULFILLED, PromiseRating::IN_PROGRESS, PromiseRating::BROKEN, PromiseRating::STALLED]
+  rating_keys: [
+    PromiseRating::FULFILLED,
+    PromiseRating::IN_PROGRESS,
+    PromiseRating::BROKEN,
+    PromiseRating::STALLED
+  ]
 )
+
+# Create sample users
+
+admin_user =
+  User.create(
+    email: Faker::Internet.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    active: true,
+    roles: [admin]
+  )
+
+expert_user =
+  User.create(
+    email: Faker::Internet.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    active: true,
+    roles: [expert]
+  )
+
+deactivated_user =
+  User.create(
+    email: Faker::Internet.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    active: false,
+    roles: [expert]
+  )
