@@ -2,7 +2,16 @@
 
 import React, { useState } from 'react';
 
-import { Button, Callout, Card, Classes, Colors, Switch, NonIdealState } from '@blueprintjs/core';
+import {
+  Button,
+  Callout,
+  Card,
+  Classes,
+  Colors,
+  Switch,
+  NonIdealState,
+  Dialog,
+} from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ApolloError } from 'apollo-client';
 import * as classNames from 'classnames';
@@ -11,7 +20,6 @@ import { useQuery, useMutation } from 'react-apollo';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { addFlashMessage } from '../actions/flashMessages';
 import {
   GetUsers as GetUsersQuery,
   GetUsersVariables as GetUsersQueryVariables,
@@ -26,21 +34,11 @@ import { SearchInput } from './forms/controls/SearchInput';
 import Loading from './Loading';
 import SpeakerAvatar from './SpeakerAvatar';
 import { Dispatch } from 'redux';
-
-function useFlashMessages() {
-  const dispatch = useDispatch();
-
-  return {
-    addSuccessFlashMessage(message: string) {
-      dispatch(addFlashMessage(message, 'success'));
-    },
-    addErrorFlashMessage(message: string) {
-      dispatch(addFlashMessage(message, 'error'));
-    },
-  };
-}
+import { useDialogs } from '../hooks/dialog-manager';
+import { useFlashMessages } from '../hooks/flash-messages';
 
 function UsersContainer() {
+  const dialogs = useDialogs();
   const dispatch = useDispatch();
   const flashes = useFlashMessages();
   const [search, setSearch] = useState('');
@@ -80,6 +78,7 @@ function UsersContainer() {
           );
         }
       }}
+      onDeleteUser={(user: any) => dialogs.openDialog(<Dialog isOpen>{user.firstName}</Dialog>)}
     />
   );
 }
@@ -89,6 +88,7 @@ interface IProps {
   includeInactive: boolean;
   loading: boolean;
   saving: boolean;
+  // TODO: Replace any with real type
   users: any[];
   error?: ApolloError;
   dispatch: Dispatch<any>;
@@ -96,6 +96,8 @@ interface IProps {
   onSearchChange(search: string): void;
   onIncludeInactiveChange(includeInactive: boolean): void;
   onUpdateUserActiveness(userId: string, userActive: boolean): void;
+  // TODO: Replace any with real type
+  onDeleteUser(user: any): void;
 }
 
 interface IUsersState {
@@ -111,9 +113,9 @@ class Users extends React.Component<IProps, IUsersState> {
     };
   }
 
-  private showConfirmDeleteModal = (confirmDeleteModalUserId: string) => () => {
-    this.setState({ confirmDeleteModalUserId });
-  };
+  // private showConfirmDeleteModal = (confirmDeleteModalUserId: string) => () => {
+  //   this.setState({ confirmDeleteModalUserId });
+  // };
 
   // private hideConfirmDeleteModal = () => {
   //   this.setState({ confirmDeleteModalUserId: null });
@@ -283,7 +285,7 @@ class Users extends React.Component<IProps, IUsersState> {
                         type="button"
                         icon={IconNames.TRASH}
                         style={{ marginLeft: 7 }}
-                        onClick={this.showConfirmDeleteModal(user.id)}
+                        onClick={() => this.props.onDeleteUser(user)}
                         title="Smazat"
                       />
                     </div>

@@ -31,6 +31,7 @@ ActiveStorage.start();
 import App from './App';
 import rootEpic from './epics';
 import rootReducer from './reducers';
+import { DialogManager } from './hooks/dialog-manager';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -45,7 +46,9 @@ const render = (RootContainer) =>
   ReactDOM.render(
     <ApolloProvider client={apolloClient}>
       <Provider store={store}>
-        <RootContainer />
+        <DialogManager>
+          <RootContainer />
+        </DialogManager>
       </Provider>
     </ApolloProvider>,
     document.getElementById('app-root'),
