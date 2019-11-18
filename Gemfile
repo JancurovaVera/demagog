@@ -144,6 +144,9 @@ group :development, :test do
 
   # For generating sample data
   gem "faker"
+
+  # Cypress integration
+  gem "cypress-rails"
 end
 
 group :development do
