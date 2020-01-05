@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build-job:
     docker:
@@ -53,6 +53,25 @@ jobs:
           root: /tmp
           paths:
              - build
+
+  build-image-job:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+
+      - run:
+          name: "Build image"
+          command: |
+            TAG=0.1.$CIRLCLE_BUILD_NUM
+
+            docker build -t vaclavbohac/demagog:$TAG
+
+      - run:
+          name: "Test image"
+          command: |
+            docker run -d --name demagog-rails vaclavbohac/demagog:$TAG
+            docker run --network container:demagog-rails appropriate/curl --retry 10 --retry--connrefused http://localhost:3000
 
   test-job:
     docker:
@@ -144,6 +163,8 @@ workflows:
   build-test-hold-deploy:
     jobs:
       - build-job
+
+      - build-image-job
 
       - test-job:
           requires:
