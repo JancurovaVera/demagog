@@ -63,25 +63,6 @@ jobs:
           paths:
              - build
 
-  build-image-job:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-
-      - run:
-          name: "Build image"
-          command: |
-            TAG=0.1.$CIRLCLE_BUILD_NUM
-
-            docker build -t vaclavbohac/demagog:$TAG
-
-      - run:
-          name: "Test image"
-          command: |
-            docker run -d --name demagog-rails vaclavbohac/demagog:$TAG
-            docker run --network container:demagog-rails appropriate/curl --retry 10 --retry--connrefused http://localhost:3000
-
   test-job:
     docker:
       - image: circleci/ruby:2.7.0-node
