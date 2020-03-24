@@ -89,6 +89,10 @@ jobs:
           at: /tmp
 
       - run:
+          name: "Install bundler"
+          command: gem install bundler:1.17.3
+
+      - run:
           name: "Update Node.js"
           command: |
             curl -sSL "https://nodejs.org/dist/v12.13.1/node-v12.13.1-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v12.13.1-linux-x64/bin/node
@@ -171,8 +175,6 @@ workflows:
   build-test-hold-deploy:
     jobs:
       - build-job
-
-      - build-image-job
 
       - test-job:
           requires:
