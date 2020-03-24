@@ -29,7 +29,7 @@ gem "uglifier", ">= 1.3.0"
 # Add gem for paging
 gem "kaminari"
 # Add webpack support
-gem "webpacker", "~> 4.0.7"
+gem "webpacker", "~> 4.2.0"
 # Add graphql support
 gem "graphql"
 # Allow CORS setup
@@ -60,7 +60,7 @@ gem "meta-tags"
 gem "prometheus_exporter"
 
 # Enables env. specific configuration
-gem "config"
+gem "config", "~> 2.2.1"
 
 # Authentication
 gem "devise", "~> 4.7.1"
@@ -108,11 +108,17 @@ gem "htmlbeautifier"
 gem "sentry-raven"
 
 # Add elasticsearch integration
-gem "elasticsearch-model", "~> 7.0.0.pre"
-gem "elasticsearch-rails", "~> 7.0.0.pre"
+gem "elasticsearch-model", "~> 7.0.0"
+gem "elasticsearch-rails", "~> 7.0.0"
 
 # Posting to Slack
 gem "slack-notifier"
+
+gem "graphlient"
+gem "tty-prompt"
+
+# Datadog integration
+gem "ddtrace"
 
 # Use Capistrano for deployment
 group :development do

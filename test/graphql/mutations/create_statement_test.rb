@@ -6,7 +6,7 @@ class CreateStatementMutationTest < GraphQLTestCase
   def mutation(statement_type, speaker, source, evaluator)
     "
       mutation {
-        createStatement(statementInput: { statementType: #{statement_type}, content: \"Lorem ipsum\", excerptedAt: \"2018-01-01\", important: false, speakerId: #{speaker.id}, sourceId: #{source.id}, published: false, countInStatistics: true, assessment: { evaluatorId: #{evaluator.id} } }) {
+        createStatement(statementInput: { statementType: #{statement_type}, content: \"Lorem ipsum\", excerptedAt: \"2018-01-01\", important: false, speakerId: #{speaker.id}, sourceId: #{source.id}, published: false, assessment: { evaluatorId: #{evaluator.id} } }) {
           statement {
             content
           }
@@ -52,6 +52,6 @@ class CreateStatementMutationTest < GraphQLTestCase
 
     result = execute_with_errors(mutation("fake_news", speaker, source, evaluator), context: authenticated_user_context)
 
-    assert_graphql_error "Argument 'statementType' on InputObject 'CreateStatementInput' has an invalid value. Expected type 'StatementType!'.", result
+    assert_graphql_error "Argument 'statementType' on InputObject 'CreateStatementInput' has an invalid value (fake_news). Expected type 'StatementType!'.", result
   end
 end

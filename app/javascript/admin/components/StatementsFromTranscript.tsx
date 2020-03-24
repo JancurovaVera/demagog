@@ -141,7 +141,7 @@ class StatementsFromTranscript extends React.Component<IProps, IState> {
                   {source.experts.length > 0 && (
                     <>
                       <br />
-                      Experti:{' '}
+                      Editoři:{' '}
                       {source.experts
                         .map((expert) => `${expert.firstName} ${expert.lastName}`)
                         .join(', ')}
@@ -354,7 +354,6 @@ class NewStatementForm extends React.Component<INewStatementFormProps> {
                 sourceId: source.id,
                 important: false,
                 published: false,
-                countInStatistics: true,
                 excerptedAt: DateTime.utc().toISO(),
                 assessment: {
                   evaluatorId: values.evaluator_id,
@@ -670,6 +669,7 @@ const addMarksFromStatements = (
             object: 'point',
           },
           mark: {
+            object: 'mark',
             type: `statement-${statement.id}`,
             data: { selected: selectedIds.includes(statement.id) },
           },
@@ -726,7 +726,10 @@ const highlightNewStatementSelection = (
           offset: newStatementSelection.endOffset,
           object: 'point',
         },
-        mark: { type: 'new-statement' },
+        mark: {
+          object: 'mark',
+          type: 'new-statement',
+        },
       }),
     );
   }

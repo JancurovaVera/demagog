@@ -51,7 +51,8 @@ import VeracitySelect from './forms/controls/VeracitySelect';
 import FormGroup from './forms/FormGroup';
 import FormikAutoSave from './forms/FormikAutoSave';
 import Loading from './Loading';
-import RichTextEditor from './RichTextEditor';
+// import RichTextEditor from './RichTextEditor';
+import ExplanationEditor from './ExplanationEditor';
 import StatementComments from './StatementComments';
 
 // Little more than 10s so it does not sync with other polls
@@ -129,7 +130,6 @@ class StatementDetail extends React.Component<IProps, IState> {
             title: statement.title,
             published: statement.published,
             important: statement.important,
-            count_in_statistics: statement.countInStatistics,
             tags: statement.tags.map((t) => t.id),
             speaker: statement.speaker.id,
             assessment: {
@@ -205,7 +205,6 @@ class StatementDetail extends React.Component<IProps, IState> {
                           explanationSlatejson: values.assessment.explanation_slatejson,
                           shortExplanation: values.assessment.short_explanation,
                         },
-                        countInStatistics: values.count_in_statistics,
                         content: values.content,
                         title: values.title,
                         important: values.important,
@@ -281,7 +280,6 @@ class StatementDetail extends React.Component<IProps, IState> {
                     const canEditEvaluator = canEditEverything && isBeingEvaluated;
                     const canEditPublished = canEditEverything && isApproved;
                     const canEditImportant = canEditEverything;
-                    // const canEditCountInStatistics = canEditEverything;
 
                     const isApprovedAndNotPublished = isApproved && !values.published;
                     const isBeingEvaluatedAndEvaluationFilled =
@@ -625,7 +623,7 @@ class StatementDetail extends React.Component<IProps, IState> {
                                     label="Odůvodnění"
                                     labelFor="assessment-explanation"
                                   >
-                                    <RichTextEditor
+                                    {/* <RichTextEditor
                                       value={values.assessment.explanation_slatejson}
                                       html={values.assessment.explanation_html}
                                       onChange={(value, html) => {
@@ -633,6 +631,13 @@ class StatementDetail extends React.Component<IProps, IState> {
                                         setFieldValue('assessment.explanation_html', html);
                                       }}
                                       statementExplanation
+                                    /> */}
+                                    <ExplanationEditor
+                                      html={values.assessment.explanation_html}
+                                      onChange={(html) => {
+                                        setFieldValue('assessment.explanation_slatejson', null);
+                                        setFieldValue('assessment.explanation_html', html);
+                                      }}
                                     />
                                   </BlueprintFormGroup>
                                 ) : (
@@ -644,6 +649,14 @@ class StatementDetail extends React.Component<IProps, IState> {
                                       }}
                                       className={css`
                                         word-break: break-word;
+
+                                        figure.image {
+                                          margin: 1rem 0;
+                                        }
+
+                                        figure.table {
+                                          margin: 1rem 0;
+                                        }
 
                                         img {
                                           max-width: 100%;
@@ -694,7 +707,7 @@ class StatementDetail extends React.Component<IProps, IState> {
 
                             <div className={classNames(Classes.FORM_GROUP, Classes.INLINE)}>
                               <label className={Classes.LABEL} style={{ flex: '1' }}>
-                                {statement.source.experts.length === 1 ? 'Expert' : 'Experti'}
+                                {statement.source.experts.length === 1 ? 'Editor' : 'Editoři'}
                               </label>
                               <div style={{ flex: '2', paddingTop: 6 }}>
                                 {statement.source.experts
@@ -772,28 +785,6 @@ class StatementDetail extends React.Component<IProps, IState> {
                             </div>
 
                             <hr style={{ borderTop: '2px solid #ccc' }} />
-
-                            {/* <div
-                              className={classNames(Classes.FORM_GROUP, Classes.INLINE)}
-                              style={{ marginTop: 10, marginBottom: 10 }}
-                            >
-                              <label
-                                htmlFor="count_in_statistics"
-                                className={classNames(Classes.LABEL, Classes.INLINE)}
-                                style={{ flex: '1' }}
-                              >
-                                Ve&nbsp;statistikách
-                              </label>
-                              <div className={Classes.FORM_CONTENT} style={{ flex: '2' }}>
-                                <Switch
-                                  id="count_in_statistics"
-                                  name="count_in_statistics"
-                                  checked={values.count_in_statistics}
-                                  onChange={handleChange}
-                                  disabled={!canEditCountInStatistics}
-                                />
-                              </div>
-                            </div> */}
 
                             <div
                               className={classNames(Classes.FORM_GROUP, Classes.INLINE)}

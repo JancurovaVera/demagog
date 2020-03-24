@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_14_203411) do
+ActiveRecord::Schema.define(version: 2020_03_04_152047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,6 +165,14 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
+  create_table "governments", force: :cascade do |t|
+    t.string "name"
+    t.date "from"
+    t.date "to"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "media", force: :cascade do |t|
     t.string "kind"
     t.string "name"
@@ -205,6 +213,15 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
     t.integer "order", null: false
     t.datetime "created_at", null: false
     t.index ["page_id"], name: "index_menu_items_on_page_id"
+  end
+
+  create_table "ministers", force: :cascade do |t|
+    t.integer "government_id"
+    t.integer "speaker_id"
+    t.integer "ordering"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -308,6 +325,10 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
     t.boolean "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "osoba_id"
+    t.string "wikidata_id"
+    t.index ["osoba_id"], name: "index_speakers_on_osoba_id"
+    t.index ["wikidata_id"], name: "index_speakers_on_wikidata_id"
   end
 
   create_table "statement_transcript_positions", force: :cascade do |t|
@@ -335,7 +356,6 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
     t.datetime "excerpted_at"
     t.boolean "important"
     t.boolean "published"
-    t.boolean "count_in_statistics"
     t.bigint "speaker_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -426,7 +446,7 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
        JOIN sources ON ((sources.id = statements.source_id)))
        JOIN article_segments ON ((article_segments.source_id = sources.id)))
        JOIN articles ON ((articles.id = article_segments.article_id)))
-    WHERE (((assessments.evaluation_status)::text = 'approved'::text) AND ((article_segments.segment_type)::text = 'source_statements'::text) AND (statements.published = true) AND (statements.count_in_statistics = true))
+    WHERE (((assessments.evaluation_status)::text = 'approved'::text) AND ((article_segments.segment_type)::text = 'source_statements'::text) AND (statements.published = true))
     GROUP BY veracities.key, statements.speaker_id, article_segments.article_id;
   SQL
   create_view "speaker_stats", sql_definition: <<-SQL
@@ -437,7 +457,7 @@ ActiveRecord::Schema.define(version: 2019_11_14_203411) do
        JOIN speakers ON ((speakers.id = statements.speaker_id)))
        JOIN assessments ON ((statements.id = assessments.statement_id)))
        JOIN veracities ON ((assessments.veracity_id = veracities.id)))
-    WHERE (((assessments.evaluation_status)::text = 'approved'::text) AND (statements.published = true) AND (statements.count_in_statistics = true))
+    WHERE (((assessments.evaluation_status)::text = 'approved'::text) AND (statements.published = true) AND ((statements.statement_type)::text = 'factual'::text))
     GROUP BY veracities.key, statements.speaker_id;
   SQL
 end
