@@ -9,7 +9,7 @@ RUN apk add --no-cache --update build-base \
   nodejs \
   nodejs-npm \
   tzdata && \
-  gem install bundler
+  gem install bundler:1.17.3
 
 WORKDIR /app
 
